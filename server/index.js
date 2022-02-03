@@ -11,7 +11,7 @@ const productOverviewRouter = require('./routes/productOverview.js');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/", expressStaticGzip(path.join(__dirname, 'client', 'dist'), {
+app.use("/", expressStaticGzip(path.join(__dirname, '/../client/dist'), {
   enableBrotli: true
 }));
 
