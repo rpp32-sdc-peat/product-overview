@@ -23,9 +23,9 @@ class QandA extends React.Component {
   componentDidMount() {
     //make call to api
     axios.get('/q&a/qa/questions', {
-      headers: {
-        'Authorization': this.props.token
-      },
+      // headers: {
+      //   'Authorization': this.props.token
+      // },
       params: {
         product_id: this.props.currentProduct
       }
