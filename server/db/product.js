@@ -27,7 +27,7 @@ const stylesSchema = new mongoose.Schema({
     sale_price: {type: Number},
     original_price: {type: Number},
     default_style: {type: Number}
-  }]
+  }],
   photos: [{thumbnail_url: {type: String}, url: {type: String}}],
   skus: [{
     quantity: {type: Number},
