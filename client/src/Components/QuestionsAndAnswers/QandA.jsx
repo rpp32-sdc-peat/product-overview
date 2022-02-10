@@ -22,14 +22,15 @@ class QandA extends React.Component {
   //method to retrieve data from api on render
   componentDidMount() {
     //make call to api
-    axios.get(this.props.apiUrl + '/qa/questions', {
-      headers: {
-        'Authorization': this.props.token
-      },
+    axios.get('/q&a/qa/questions', {
+      // headers: {
+      //   'Authorization': this.props.token
+      // },
       params: {
         product_id: this.props.currentProduct
       }
     }).then((results) => {
+      console.log(results)
       //store questions data in state
       var questionsUnsorted = results.data.results;
       var sorted = questionsUnsorted.sort((a, b) => {
