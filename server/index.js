@@ -6,6 +6,7 @@ const app = express();
 
 // Import your routers here
 const productOverviewRouter = require('./routes/productOverview.js');
+const questionsAndAnswersRouter = require('./routes/questionsAndAnswers.js')
 
 app.use(cors());
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use("/", expressStaticGzip(path.join(__dirname, '/../client/dist'), {
 }));
 
 // Place your routers
-app.use('/products', productOverviewRouter);
+app.use('/productOverview', productOverviewRouter);
+app.use('/q&a', questionsAndAnswersRouter);
 
-module.exports = app;
+app.listen(port, () => console.log('Listening on:', port));
