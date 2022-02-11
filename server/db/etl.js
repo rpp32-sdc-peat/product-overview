@@ -1,82 +1,64 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path');
-// const { Product, Styles } = require('./product.js');
-
-// var readProductData = fs.createReadStream(path.join(__dirname, '/../data/product.csv'));
-// var readFeaturesData = fs.createReadStream(path.join(__dirname, '/../data/features.csv'));
+const { Product, Styles } = require('./product.js');
 
 (fs.createReadStream(path.join(__dirname, '/../../data/product.csv'))
   .pipe(csv())
   .on('data', async productData => {
-    // var newProduct = new Product({
-    //   productId: productData['id']
-    //   name: productData['name'],
-    //   slogan: productData['slogan'],
-    //   description: productData['description'],
-    //   category: productData['category'],
-    //   default_price: productData['default_price'],
-    //   styles: [{
-    //     styleId: {type: stylesSchema, default: {}}
-    //   }]
-    // });
-
-    // console.log(productData['id']);
-
-    var listOfStyles = await readStylesData(productData['id']);
-    var listOfPhotos = await readPhotosData(productData['id']);
-    var listOfSkus = await readSkusData(productData['id']);
-
-    readStylesData(productData['id'])
-      // .then(result => console.log(result));
-
-    // console.log(listOfStyles);
-    // console.log(listOfPhotos);
-    // console.log(listOfSkus);
-
-    // var newStyle = new Styles({
-    //   product_id: productData['id'],
-    //   styles: listOfStyles,
-    //   photos: listOfPhotos,
-    //   skus: listOfSkus
-    // })
-
-    // await newProduct.save();
+    var newProduct = new Product({
+      productId: productData['id']
+      name: productData['name'],
+      slogan: productData['slogan'],
+      description: productData['description'],
+      category: productData['category'],
+      default_price: productData['default_price'],
+      styles: [{
+        styleId: {type: stylesSchema, default: {}}
+      }]
+    });
   })
   .on('error', err => console.log(err))
 );
 
-var readStylesData = async (currentProductId) => {
-  var stylesList = [];
+var stylesList = [];
+var currentProductId = 1;
 
-  const stylesStream = fs.createReadStream(path.join(__dirname, '/../../data/styles.csv'));
+const stylesStream = fs.createReadStream(path.join(__dirname, '/../../data/styles.csv'));
 
-  stylesStream
-    .pipe(csv())
-    .on('data', stylesData => {
-      if (stylesData['productId'] === currentProductId) {
-        stylesList.push({
-          styleId: stylesData['id'],
-          styles: [{
-            name: stylesData['name'],
-            sale_price: stylesData['sale_price'],
-            original_price: stylesData['original_price'],
-            default_style: stylesData['default_style']
-          }],
-        })
-      } else {
-        stylesStream.pause();
-        console.log('paused');
-        return;
-      }
-    })
-    .on('end', () => {
-      console.log(stylesList);
-    })
-    .on('error', err => console.log(err));
-
-  // return stylesList;
-}
+(stylesStream
+  .pipe(csv())
+  .on('data', async stylesData => {
+    if (stylesData['productId'] === currentProductId) {
+      stylesList.push({
+        styleId: stylesData['id'],
+        styles: [{
+          name: stylesData['name'],
+          sale_price: stylesData['sale_price'],
+          original_price: stylesData['original_price'],
+          default_style: stylesData['default_style']
+        }],
+      })
+    } else {
+      stylesStream.pause();
+      var newStyle = new Styles({
+        product_id: stylesData['id'],
+        styles: listOfStyles,
+        photos: listOfPhotos,
+        skus: listOfSkus
+      })
+      // Create a new
+      stylesList = [];
+      currentProductId++;
+      stylesStream.resume();
+      return;
+    }
+  })
+  .on('end', () => {
+    console.log(stylesList);
+  })
+  .on('error', err => console.log(err));
+)
 
 var readPhotosData = async (currentProductId) => {
   var photosList = [];
