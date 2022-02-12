@@ -13,7 +13,7 @@ class AnswersList extends React.Component {
   //method to get answers list for particular questions id passed through props
   componentDidMount() {
     //make call to api for list using question id
-    axios.get(this.props.apiUrl + '/qa/questions/' + this.props.id + '/answers', {
+    axios.get('/qa/questions/' + this.props.id + '/answers', {
       headers: {
         'Authorization': this.props.token
       },
