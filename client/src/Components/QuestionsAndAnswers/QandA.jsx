@@ -122,20 +122,25 @@ class QandA extends React.Component {
               if (warningMessage.length > 30) {
                 alert(warningMessage);
               } else {
-                axios.post(this.props.apiUrl + '/qa/questions',
+                var dateObj = new Date();
+                var month = dateObj.getUTCMonth() + 1; //months from 1-12
+                var day = dateObj.getUTCDate();
+                var year = dateObj.getUTCFullYear();
+                var time = dateObj.getHours() + ":" + dateObj.getMinutes() + ":" + dateObj.getSeconds();
+                var dateWritten = `${year}-${month}-${day} ${time}`
+                // 2021-03-18 06:25:21
+                axios.post('/qa/questions',
                   {
                     body: event.target[0].value,
                     name: event.target[1].value,
                     email: event.target[2].value,
-                    product_id: this.props.currentProduct
-                  },
-                  {
-                    headers: {
-                      'Authorization': this.props.token
-                    }
-                  }).then(() => {
+                    product_id: this.props.currentProduct,
+                    date_written: dateWritten
+                  })
+                  .then(() => {
                     console.log('Successfully posted new question');
-                  }).catch((err) => {
+                  })
+                  .catch((err) => {
                     console.log('Error posting new question: ' + err);
                   });
                   this.setState({ showQuestionModal: false });

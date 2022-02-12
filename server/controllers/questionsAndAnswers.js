@@ -15,5 +15,11 @@ exports.questionsAndAnswers = {
       .then((result) => {
         res.send(result.data)
       })
+  },
+
+  createQuestion: async (req, res) => {
+    const product_id = Number(req.query.product_id);
+    console.log(req)
+    await axios.post(`http://localhost:8080/qa/questions`)
   }
 }

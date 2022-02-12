@@ -6,8 +6,11 @@ const { questionsAndAnswers } = require('../controllers/questionsAndAnswers.js')
 
 router.route('/questions')
   .get((req, res) => {questionsAndAnswers.getQuestions(req, res)})
-router.route('/questions/:question_id/answers')
+  .post((req, res) => {
+    console.log('hello')
+    createQuestion.questionsAndAnswers(req, res)})
 
+router.route('/questions/:question_id/answers')
   .get((req, res) => {
     questionsAndAnswers.getAnswers(req, res)
   })
