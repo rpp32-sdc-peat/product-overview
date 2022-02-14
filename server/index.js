@@ -3,7 +3,7 @@ const expressStaticGzip = require("express-static-gzip");
 const path = require('path');
 const cors = require('cors');
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // Import your routers here
 const productOverviewRouter = require('./routes/productOverview.js');

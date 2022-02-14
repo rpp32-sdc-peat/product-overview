@@ -18,8 +18,10 @@ exports.questionsAndAnswers = {
   },
 
   createQuestion: async (req, res) => {
-    const product_id = Number(req.query.product_id);
-    console.log(req)
-    await axios.post(`http://localhost:8080/qa/questions`)
+    const product_id = Number(req.params.product_id);
+    await axios.post(`http://localhost:8080/qa/questions`, req.body)
+      .then((result) => {
+        res.send('Successfully posted new question')
+      })
   }
 }
