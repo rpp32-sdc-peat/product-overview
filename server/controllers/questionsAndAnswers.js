@@ -8,7 +8,6 @@ exports.questionsAndAnswers = {
         res.send(result.data)
     })
   },
-
   getAnswers: async (req, res) => {
     const question_id = Number(req.params.question_id);
     await axios.get(`http://localhost:8080/qa/questions/${question_id}/answers`)
@@ -23,7 +22,6 @@ exports.questionsAndAnswers = {
         res.send('Successfully posted new question')
       })
   },
-
   createAnswer: async (req, res) => {
     const question_id = Number(req.params.question_id);
     await axios.post(`http://localhost:8080/qa/questions/${question_id}/answers/`, req.body)
