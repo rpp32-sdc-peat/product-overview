@@ -193,21 +193,25 @@ class QandA extends React.Component {
               if (warningMessage.length > 30) {
                 alert(warningMessage);
               } else {
+                var dateObj = new Date();
+                var month = dateObj.getUTCMonth() + 1; //months from 1-12
+                var day = dateObj.getUTCDate();
+                var year = dateObj.getUTCFullYear();
+                var time = dateObj.getHours() + ":" + dateObj.getMinutes() + ":" + dateObj.getSeconds();
+                var answerDateWritten = `${year}-${month}-${day} ${time}`
                 var photoURLs = [];
                 this.state.uploadedPhotos.map((photo) => {
                   photoURLs.push(photo.name);
                 })
-                axios.post(this.props.apiUrl + '/qa/questions/' + this.state.question_id + '/answers',
+                axios.post('/qa/questions/' + this.state.question_id + '/answers',
                   {
                     body: event.target[0].value,
                     name: event.target[1].value,
                     email: event.target[2].value,
-                    photos: photoURLs
+                    photos: photoURLs,
+                    date_written: answerDateWritten
                   },
                   {
-                    headers: {
-                      'Authorization': this.props.token
-                    },
                     params: {
                       question_id: this.state.question_id
                     }

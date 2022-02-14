@@ -2,18 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const { questionsAndAnswers } = require('../controllers/questionsAndAnswers.js')
-// console.log(questionsAndAnswers)
+const { getQuestions, createQuestion, getAnswers, createAnswer } = questionsAndAnswers;
 
 router.route('/questions')
-  .get((req, res) => {
-    questionsAndAnswers.getQuestions(req, res)
-  })
-  .post((req, res) => {
-    questionsAndAnswers.createQuestion(req, res)})
+  .get((req, res) => {getQuestions(req, res)})
+  .post((req, res) => {createQuestion(req, res)})
 
 router.route('/questions/:question_id/answers')
-  .get((req, res) => {
-    questionsAndAnswers.getAnswers(req, res)
-  })
+  .get((req, res) => {getAnswers(req, res)})
+  .post((req, res) => {createAnswer(req, res)})
 
 module.exports = router;
