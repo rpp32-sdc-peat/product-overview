@@ -8,6 +8,7 @@ exports.questionsAndAnswers = {
         res.send(result.data)
     })
   },
+
   getAnswers: async (req, res) => {
     const question_id = Number(req.params.question_id);
     await axios.get(`http://localhost:8080/qa/questions/${question_id}/answers`)
@@ -22,11 +23,45 @@ exports.questionsAndAnswers = {
         res.send('Successfully posted new question')
       })
   },
+
   createAnswer: async (req, res) => {
     const question_id = Number(req.params.question_id);
     await axios.post(`http://localhost:8080/qa/questions/${question_id}/answers/`, req.body)
       .then((result) => {
         res.send('Successfully posted new answer')
       })
+  },
+// ============================ continue =====>
+  markQuestionHelpful: async (req, res) => {
+    const question_id = Number(req.params.question_id);
+    await axios.put(`http://localhost:8080/qa/questions/${question_id}/helpful`)
+      .then((result) => {
+        res.send('Successfully posted question helpfulness')
+      })
+  },
+
+  markQuestionReported: async (req, res) => {
+    const question_id = Number(req.params.question_id);
+    await axios.put(`http://localhost:8080/qa/questions/${question_id}/answers/`, req.body)
+      .then((result) => {
+        res.send('Successfully posted new answer')
+      })
+  },
+
+  markAnswerHelpful: async (req, res) => {
+    const question_id = Number(req.params.question_id);
+    await axios.put(`http://localhost:8080/qa/questions/${question_id}/answers/`, req.body)
+      .then((result) => {
+        res.send('Successfully posted new answer')
+      })
+  },
+
+  markAnswerReported: async (req, res) => {
+    const question_id = Number(req.params.question_id);
+    await axios.put(`http://localhost:8080/qa/questions/${question_id}/answers/`, req.body)
+      .then((result) => {
+        res.send('Successfully posted new answer')
+      })
   }
+
 }

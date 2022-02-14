@@ -64,10 +64,7 @@ class AnswersList extends React.Component {
   }
 
   answerYesLinkPut(id) {
-    axios.put(this.props.apiUrl + '/qa/answers/' + id + '/helpful', {
-      headers: {
-        'Authorization': this.props.token
-      },
+    axios.put('/qa/answers/' + id + '/helpful', {
       params: {
         answer_id: id
       }
