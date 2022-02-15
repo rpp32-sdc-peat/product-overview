@@ -47,7 +47,7 @@ exports.questionsAndAnswers = {
         res.send(`Successfully reported question #${question_id}`)
       })
   },
-// ============================ continue =====>
+
   markAnswerHelpful: async (req, res) => {
     const answer_id = Number(req.params.answer_id);
     await axios.put(`http://localhost:8080/qa/answers/${answer_id}/helpful`)
