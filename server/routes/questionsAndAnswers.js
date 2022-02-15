@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { questionsAndAnswers } = require('../controllers/questionsAndAnswers.js')
-const { getQuestions, createQuestion, getAnswers, createAnswer, markQuestionHelpful, markQuestionReported,  } = questionsAndAnswers;
+const { getQuestions, createQuestion, getAnswers, createAnswer, markQuestionHelpful, markQuestionReported, markAnswerHelpful, markAnswerReported } = questionsAndAnswers;
 
 router.route('/questions')
   .get((req, res) => {getQuestions(req, res)})
@@ -19,10 +19,10 @@ router.route('/questions/:question_id/helpful')
 router.route('/questions/:question_id/report')
   .put((req, res) => {markQuestionReported(req, res)})
 
-router.route('/qa/answers/:answer_id/helpful')
+router.route('/answers/:answer_id/helpful')
   .put((req, res) => {markAnswerHelpful(req, res)})
 
-router.route('/qa/answers/:answer_id/report')
+router.route('/answers/:answer_id/report')
   .put((req, res) => {markAnswerReported(req, res)})
 
 module.exports = router;

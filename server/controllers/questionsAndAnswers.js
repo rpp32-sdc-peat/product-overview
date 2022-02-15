@@ -31,7 +31,7 @@ exports.questionsAndAnswers = {
         res.send('Successfully posted new answer')
       })
   },
-// ============================ continue =====>
+
   markQuestionHelpful: async (req, res) => {
     const question_id = Number(req.params.question_id);
     await axios.put(`http://localhost:8080/qa/questions/${question_id}/helpful`)
@@ -42,25 +42,31 @@ exports.questionsAndAnswers = {
 
   markQuestionReported: async (req, res) => {
     const question_id = Number(req.params.question_id);
-    await axios.put(`http://localhost:8080/qa/questions/${question_id}/report`, req.body)
+    await axios.put(`http://localhost:8080/qa/questions/${question_id}/report`)
       .then((result) => {
         res.send(`Successfully reported question #${question_id}`)
       })
   },
-
+// ============================ continue =====>
   markAnswerHelpful: async (req, res) => {
-    const question_id = Number(req.params.question_id);
-    await axios.put(`http://localhost:8080/qa/questions/${question_id}/answers/`, req.body)
+    const answer_id = Number(req.params.answer_id);
+    await axios.put(`http://localhost:8080/qa/answers/${answer_id}/helpful`)
       .then((result) => {
-        res.send('Successfully posted new answer')
+        res.send('Successfully posted answer helpfullness')
+      })
+      .catch((err) => {
+        res.status(500).send(`Error accessing DB ${err}`)
       })
   },
 
   markAnswerReported: async (req, res) => {
-    const question_id = Number(req.params.question_id);
-    await axios.put(`http://localhost:8080/qa/questions/${question_id}/answers/`, req.body)
+    const answer_id = Number(req.params.answer_id);
+    await axios.put(`http://localhost:8080/qa/answers/${answer_id}/report`)
       .then((result) => {
-        res.send('Successfully posted new answer')
+        res.send('Successfully reported answer')
+      })
+      .catch((err) => {
+        res.status(500).send(`Error accessing DB ${err}`)
       })
   }
 
