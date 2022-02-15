@@ -16,7 +16,7 @@ router.route('/questions/:question_id/answers')
 router.route('/questions/:question_id/helpful')
   .put((req, res) => {markQuestionHelpful(req, res)})
 
-router.route('/qa/questions/:question_id/report')
+router.route('/questions/:question_id/report')
   .put((req, res) => {markQuestionReported(req, res)})
 
 router.route('/qa/answers/:answer_id/helpful')

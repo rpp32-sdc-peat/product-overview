@@ -42,9 +42,9 @@ exports.questionsAndAnswers = {
 
   markQuestionReported: async (req, res) => {
     const question_id = Number(req.params.question_id);
-    await axios.put(`http://localhost:8080/qa/questions/${question_id}/answers/`, req.body)
+    await axios.put(`http://localhost:8080/qa/questions/${question_id}/report`, req.body)
       .then((result) => {
-        res.send('Successfully posted new answer')
+        res.send(`Successfully reported question #${question_id}`)
       })
   },
 
