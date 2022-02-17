@@ -13,10 +13,7 @@ class AnswersList extends React.Component {
   //method to get answers list for particular questions id passed through props
   componentDidMount() {
     //make call to api for list using question id
-    axios.get(this.props.apiUrl + '/qa/questions/' + this.props.id + '/answers', {
-      headers: {
-        'Authorization': this.props.token
-      },
+    axios.get('/qa/questions/' + this.props.id + '/answers', {
       params: {
         question_id: this.props.id
       }
@@ -67,10 +64,7 @@ class AnswersList extends React.Component {
   }
 
   answerYesLinkPut(id) {
-    axios.put(this.props.apiUrl + '/qa/answers/' + id + '/helpful', {
-      headers: {
-        'Authorization': this.props.token
-      },
+    axios.put('/qa/answers/' + id + '/helpful', {
       params: {
         answer_id: id
       }
@@ -82,10 +76,7 @@ class AnswersList extends React.Component {
   }
 
   reportAnswerPut(id) {
-    axios.put(this.props.apiUrl + '/qa/answers/' + id + '/report', {
-      headers: {
-        'Authorization': this.props.token
-      },
+    axios.put('/qa/answers/' + id + '/report', {
       params: {
         answer_id: id
       }
