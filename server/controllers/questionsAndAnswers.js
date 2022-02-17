@@ -6,7 +6,10 @@ exports.questionsAndAnswers = {
     await axios.get(`http://localhost:8080/qa/questions?product_id=${product_id}`)
       .then((result) => {
         res.send(result.data)
-    })
+      })
+      .catch((err) => {
+        res.status(500).send(`Error accessing DB ${err}`)
+      })
   },
 
   getAnswers: async (req, res) => {
@@ -15,12 +18,18 @@ exports.questionsAndAnswers = {
       .then((result) => {
         res.send(result.data)
       })
+      .catch((err) => {
+        res.status(500).send(`Error accessing DB ${err}`)
+      })
   },
 
   createQuestion: async (req, res) => {
     await axios.post(`http://localhost:8080/qa/questions`, req.body)
       .then((result) => {
         res.send('Successfully posted new question')
+      })
+      .catch((err) => {
+        res.status(500).send(`Error accessing DB ${err}`)
       })
   },
 
@@ -30,6 +39,9 @@ exports.questionsAndAnswers = {
       .then((result) => {
         res.send('Successfully posted new answer')
       })
+      .catch((err) => {
+        res.status(500).send(`Error accessing DB ${err}`)
+      })
   },
 
   markQuestionHelpful: async (req, res) => {
@@ -38,6 +50,9 @@ exports.questionsAndAnswers = {
       .then((result) => {
         res.send('Successfully posted question helpfulness')
       })
+      .catch((err) => {
+        res.status(500).send(`Error accessing DB ${err}`)
+      })
   },
 
   markQuestionReported: async (req, res) => {
@@ -45,6 +60,9 @@ exports.questionsAndAnswers = {
     await axios.put(`http://localhost:8080/qa/questions/${question_id}/report`)
       .then((result) => {
         res.send(`Successfully reported question #${question_id}`)
+      })
+      .catch((err) => {
+        res.status(500).send(`Error accessing DB ${err}`)
       })
   },
 
@@ -69,5 +87,4 @@ exports.questionsAndAnswers = {
         res.status(500).send(`Error accessing DB ${err}`)
       })
   }
-
 }
