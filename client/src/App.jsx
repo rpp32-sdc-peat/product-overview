@@ -8,7 +8,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentProduct: 64620
+      currentProduct: 64625
     }
     this.apiUrl = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rpp';
     this.trackClicks = this.trackClicks.bind(this);
@@ -17,33 +17,33 @@ class App extends React.Component {
   //method to post to interations api
   //takes event object, and widget name (string) as arguments
   trackClicks(event, widgetName) {
-    var timeClicked = new Date();
-    var element = event.target;
+    // var timeClicked = new Date();
+    // var element = event.target;
 
-    axios.post(this.apiUrl + '/interactions',
-    {
-      element: element.className,
-      widget: widgetName,
-      time: timeClicked.toString()
-    },
-    {
-      headers: {
-        'Authorization': process.env.API_KEY,
-      }
-    }).then(() => {
-      console.log('Successfully tracked click');
-    }).catch((error) => {
-      console.log('Error posting to interactions API: ' + error);
-    });
+    // axios.post(this.apiUrl + '/interactions',
+    // {
+    //   element: element.className,
+    //   widget: widgetName,
+    //   time: timeClicked.toString()
+    // },
+    // {
+    //   headers: {
+    //     'Authorization': process.env.API_KEY,
+    //   }
+    // }).then(() => {
+    //   console.log('Successfully tracked click');
+    // }).catch((error) => {
+    //   console.log('Error posting to interactions API: ' + error);
+    // });
   }
 
   render() {
     return (
       <div>
-        <Overview apiUrl={this.apiUrl} token={process.env.API_KEY} currentProduct={this.state.currentProduct} trackClicks={this.trackClicks} />
-        <Related apiUrl={this.apiUrl} token={process.env.API_KEY} currentProduct={this.state.currentProduct} trackClicks={this.trackClicks} />
+        {/* <Overview apiUrl={this.apiUrl} token={process.env.API_KEY} currentProduct={this.state.currentProduct} trackClicks={this.trackClicks} /> */}
+        {/* <Related apiUrl={this.apiUrl} token={process.env.API_KEY} currentProduct={this.state.currentProduct} trackClicks={this.trackClicks} /> */}
         <QandA apiUrl={this.apiUrl} token={process.env.API_KEY} currentProduct={this.state.currentProduct} trackClicks={this.trackClicks} />
-        <RR apiUrl={this.apiUrl} token={process.env.API_KEY} currentProduct={this.state.currentProduct} trackClicks={this.trackClicks} />
+        {/* <RR apiUrl={this.apiUrl} token={process.env.API_KEY} currentProduct={this.state.currentProduct} trackClicks={this.trackClicks} /> */}
       </div>
     )
   }
