@@ -1,5 +1,5 @@
 const fs = require('fs');
-const csv = require('csv-parser');
+const csv = require('fast-csv');
 const path = require('path');
 const { Product } = require('../db/product.js');
 
@@ -10,7 +10,7 @@ var productData = [];
 (async () => {
   try {
     productsStream
-      .pipe(csv())
+      .pipe(csv.parse({ headers: true }))
       .on('data', async row => {
         try {
           productData.push({
@@ -23,15 +23,11 @@ var productData = [];
           });
 
           if (productData.length === 10000) {
-            productsStream.pause();
-
             await Product.create(productData);
 
             console.log(`Inserted ${productData.length} product data from Product CSV`);
 
             productData = [];
-
-            productsStream.resume();
           }
         }
         catch (err) {

@@ -1,36 +1,32 @@
 const fs = require('fs');
-const csv = require('csv-parser');
+const csv = require('fast-csv');
 const path = require('path');
 const { Styles } = require('../db/product.js');
 
 const skusStream = fs.createReadStream(path.join(__dirname, '/../../data/skus.csv'));
 
-var skusList = [];
-var currentStyleId = 1;
+var skusWriteData = [];
 
 (async () => {
   try {
     skusStream
-      .pipe(csv())
+      .pipe(csv.parse({ headers: true, quote: null }))
       .on('data', async row => {
         try {
-          if (row['styleId'] === currentStyleId) {
-            skusList.push({
-              skuId: row['id'],
-              size: row['size'],
-              quantity: row['quantity']
-            })
-          } else {
-            skusStream.pause();
+          skusWriteData.push({
+            updateOne: {
+              filter: { 'results.style_id': row['styleId'] },
+              update: { $addToSet: { 'results.$.skus': {
+                quantity: row['quantity'],
+                size: row['size']
+              }}},
+            }
+          });
 
-            await Styles.updateOne({ $and: [{ product_id: currentStyleId }, { results: { style_id: row['styleId']} }] }, { results: [{ skus: skusList }] });
-
-            skusList = [];
-            currentStyleId++;
-
-            console.log(`Added Skus for style ID: ${row['styleId']}`);
-
-            skusStream.resume();
+          if (skusWriteData.length === 10000) {
+            await Styles.bulkWrite(skusWriteData);
+            console.log(`Imported ${skusWriteData.length} Skus CSV Data`);
+            skusWriteData = [];
           }
         }
         catch (err) {
@@ -38,7 +34,7 @@ var currentStyleId = 1;
         }
       })
       .on('end', () => {
-        console.log('Imported Skus CSV data');
+        console.log('Imported All Skus CSV data');
         currentStyleId = 1;
         process.exit();
       })

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const csv = require('csv-parser');
+const csv = require('fast-csv');
 const path = require('path');
 const { Styles } = require('../db/product.js');
 
@@ -10,29 +10,27 @@ var photosWriteData = [];
 (async () => {
   try {
     photosStream
-      .pipe(csv())
+      .pipe(csv.parse({ headers: true, quote: null }))
       .on('data', async row => {
         try {
           photosWriteData.push({
             updateOne: {
-              filter: { results.style_id: row['styleId'] },
-              update: { $addToSet: { results.photos: {
+              filter: { 'results.style_id': row['styleId'] },
+              update: { $addToSet: { 'results.$.photos': {
                 thumbnail_url: row['thumbnail_url'],
                 url: row['url']
-              }}}
+              }}},
             }
           });
 
-          if (photosWriteData.length === 500) {
-            photosStream.pause();
-            await Styles.bulkWrite(stylesWriteData);
+          if (photosWriteData.length === 10000) {
+            await Styles.bulkWrite(photosWriteData);
             console.log(`Imported ${photosWriteData.length} Photos CSV Data`);
             photosWriteData = [];
-            photosStream.resume();
           }
         }
         catch (err) {
-          throw err;
+          console.error(err);
         }
       })
       .on('end', () => {

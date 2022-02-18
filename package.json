@@ -22,10 +22,10 @@
     "mongoose": "^6.2.0"
   },
   "devDependencies": {
-    "csv-parser": "^3.0.0",
+    "fast-csv": "^4.3.6",
     "fs": "^0.0.1-security",
     "jest": "^27.5.0",
-    "merge-csv": "^1.0.3",
+    "mongodb": "^4.4.0",
     "supertest": "^6.2.2"
   }
 }
