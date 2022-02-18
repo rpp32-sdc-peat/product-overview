@@ -1,4 +1,5 @@
 const express = require('express');
+
 const expressStaticGzip = require("express-static-gzip");
 const path = require('path');
 const cors = require('cors');
@@ -17,6 +18,6 @@ app.use("/", expressStaticGzip(path.join(__dirname, '/../client/dist'), {
 
 // Place your routers
 app.use('/productOverview', productOverviewRouter);
-app.use('/q&a', questionsAndAnswersRouter);
+app.use('/qa', questionsAndAnswersRouter);
 
 app.listen(port, () => console.log('Listening on:', port));
