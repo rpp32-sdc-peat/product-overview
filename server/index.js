@@ -17,7 +17,7 @@ app.use("/", expressStaticGzip(path.join(__dirname, '/../client/dist'), {
 }));
 
 // Place your routers
-app.use('/productOverview', productOverviewRouter);
+app.use('/products', productOverviewRouter);
 app.use('/qa', questionsAndAnswersRouter);
 
 app.listen(port, () => console.log('Listening on:', port));
