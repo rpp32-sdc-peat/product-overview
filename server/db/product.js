@@ -37,7 +37,13 @@ const stylesSchema = new mongoose.Schema({
   }],
 });
 
+const relatedProductsSchema = new mongoose.Schema({
+  product_id: {type: Number},
+  related_products: [Number]
+})
+
 const Product = mongoose.model('Product', productSchema);
 const Styles = mongoose.model('Styles', stylesSchema);
+const RelatedProducts = mongoose.model('RelatedProducts', relatedProductsSchema);
 
-module.exports = { Product, Styles };
+module.exports = { Product, Styles, RelatedProducts };
