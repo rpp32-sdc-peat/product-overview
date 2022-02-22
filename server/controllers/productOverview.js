@@ -1,7 +1,10 @@
 const axios = require('axios');
 
+// query -> parameters inserted from front end
+// : -> params (example -> :product_id)
+
 const productOverview = {
-  getProduct: async (req, res) => {
+  getProducts: async (req, res) => {
     const product_id = Number(req.query.product_id);
     await axios.get(`http://localhost:8080/qa/questions?product_id=${product_id}`)
       .then((result) => {
