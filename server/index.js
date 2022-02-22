@@ -5,4 +5,4 @@ const productOverviewRouter = require('./routes/productOverview.js');
 app.use(express.json());
 app.use('/products', productOverviewRouter);
 
-app.listen(port, () => console.log('Listening on:', port));
+module.exports = app;

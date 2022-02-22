@@ -20,13 +20,18 @@ const productOverview = {
         queryCount = Number(count);
       }
 
-      var productList = Product.find({}).skip(30 * queryPage).limit(queryCount);
+      var productList = await Product.find({}).skip(30 * queryPage).limit(queryCount);
+
+      return productList;
+    }
+    catch (error) {
+      throw error;
     }
   },
 
   getProduct: async (productId) => {
     try {
-      var productDetails = await Product.find({ id: productId });
+      var productDetails = await Product.findOne({ id: productId });
       return productDetails;
     }
     catch (error) {
@@ -36,7 +41,7 @@ const productOverview = {
 
   getStyles: async (productId) => {
     try {
-      var stylesInfo = await Styles.find({ product_id: productId });
+      var stylesInfo = await Styles.findOne({ product_id: productId });
       return stylesInfo;
     }
     catch (error) {
