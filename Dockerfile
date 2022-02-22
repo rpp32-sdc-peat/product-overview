@@ -1,13 +1,13 @@
 FROM node:^17.2.0
 
-WORKDIR /code
+WORKDIR /app
 
 ENV PORT 80
 
-COPY package.json /code/package.json
+COPY package.json /app/package.json
 
 RUN npm install
 
-COPY . /code
+COPY . /app
 
 CMD [ 'nodemon', 'server/index.js']
