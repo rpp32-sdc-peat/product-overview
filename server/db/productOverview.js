@@ -1,26 +1,23 @@
 const axios = require('axios');
-const { Product, Styles, RelatedProducts } = require('./product.js');
+const { Product, Styles, RelatedProducts } = require('./index.js');
 
-// query -> parameters inserted from front end
-// : -> params (example -> :product_id)
-
-const productOverview = {
+exports.productOverview = {
   getProducts: async (page, count) => {
     try {
-      // page -> page of results to return. Default: 1
-      // count -> how many results per page to return. Default: 5
       var queryPage = 1;
       var queryCount = 5;
 
-      if (page) {
+      console.log(page, count);
+
+      if (page !== '' && page !== undefined) {
         queryPage = Number(page);
       }
 
-      if (count) {
+      if (count !== '' && count !== undefined) {
         queryCount = Number(count);
       }
 
-      var productList = await Product.find({}).skip(30 * queryPage).limit(queryCount);
+      var productList = await Product.find({}).skip((queryPage > 1 ? 30 * queryPage : 0)).limit(queryCount);
 
       return productList;
     }
@@ -37,7 +34,7 @@ const productOverview = {
     catch (error) {
       throw error;
     }
-  }
+  },
 
   getStyles: async (productId) => {
     try {
@@ -47,7 +44,7 @@ const productOverview = {
     catch (error) {
       throw error;
     }
-  }
+  },
 
   getRelatedProducts: async (productId) => {
     try {
@@ -58,6 +55,4 @@ const productOverview = {
       throw error;
     }
   }
-}
-
-module.exports = productOverview;
+};

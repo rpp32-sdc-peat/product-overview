@@ -4,7 +4,6 @@
   "description": "SDC Project - Peat",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --watch",
     "start": "nodemon ./server/server.js",
     "test": "jest --coverage"
   },
@@ -17,16 +16,16 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.2",
-    "express-static-gzip": "^2.1.1",
-    "mongoose": "^6.2.0",
     "dotenv": "^14.2.0",
+    "express": "^4.17.2",
     "express-http-proxy": "^1.6.3",
+    "express-static-gzip": "^2.1.1",
     "http": "0.0.1-security",
     "http-proxy": "^1.18.1",
     "jest": "^27.4.5",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
+    "mongoose": "^6.2.0",
     "node": "^17.2.0",
     "pm2": "^5.1.2",
     "postcss-loader": "^6.2.1",
@@ -37,6 +36,7 @@
     "underscore": "^1.13.2"
   },
   "devDependencies": {
+    "axios": "^0.26.0",
     "fast-csv": "^4.3.6",
     "fs": "^0.0.1-security",
     "jest": "^27.5.0",

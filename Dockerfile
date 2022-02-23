@@ -1,13 +1,13 @@
-FROM node:^17.2.0
+FROM node:17-alpine
 
 WORKDIR /app
 
 ENV PORT 80
 
-COPY package.json /app/package.json
+COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci install
 
 COPY . /app
 
-CMD [ 'nodemon', 'server/index.js']
+CMD [ "nodemon", "server/index.js"]
