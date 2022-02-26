@@ -9,7 +9,7 @@ db.on('connect', () => console.log('Connection established at ', mongoDB));
 db.on('error', () => console.error.bind(console, 'MongoDB connection error:'));
 
 const productSchema = new mongoose.Schema({
-  id: {type: Number, unique: true},
+  id: {type: Number, index: true},
   name: {type: String},
   slogan: {type: String},
   description: {type: String},
@@ -22,9 +22,9 @@ const productSchema = new mongoose.Schema({
 });
 
 const stylesSchema = new mongoose.Schema({
-  product_id: {type: Number},
+  product_id: {type: Number, index: true},
   results: [{
-    style_id: {type: Number, unique: true},
+    style_id: {type: Number, index: true},
     name: {type: String},
     sale_price: {type: Number},
     original_price: {type: Number},
@@ -41,6 +41,10 @@ const relatedProductsSchema = new mongoose.Schema({
   product_id: {type: Number},
   related_products: [Number]
 })
+
+productSchema.index({ id: 1 });
+stylesSchema.index({ product_id: 1, 'results.style_id': 1 });
+relatedProductsSchema.index({ product_id: 1 });
 
 const Product = mongoose.model('Product', productSchema);
 const Styles = mongoose.model('Styles', stylesSchema);

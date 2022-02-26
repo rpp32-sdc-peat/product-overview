@@ -1,6 +1,14 @@
 const axios = require('axios');
 const { Product, Styles, RelatedProducts } = require('./index.js');
 
+// under 50ms for API queries -> check Thunder Client / Postman
+// Redis and caching for optimization
+// Redis allows uploading a bunch of keys for 'warming up'
+// Do not set 'time to live' or else all the uploaded keys 'age out' and testing will be inefficient
+
+// Test range -> half keys should already be in cache before testing
+// Let k6 run for awhile to 'warm' it up
+
 exports.productOverview = {
   getProducts: async (page, count) => {
     try {
@@ -48,8 +56,15 @@ exports.productOverview = {
 
   getRelatedProducts: async (productId) => {
     try {
-      var relProductsInfo = await RelatedProducts.findOne({ product_id: productId });
-      return relProductsInfo.related_products;
+      var relProductsInfo = await RelatedProducts.find({ product_id: productId });
+      var relProductsData = {
+        product_id: productId,
+        related_products: []
+      };
+      for (var i = 0; i < relProductsInfo.length; i++) {
+        relProductsData.related_products.push(...relProductInfo[i].relatedProducts);
+      }
+      return relProductsData;
     }
     catch (error) {
       throw error;

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const csv = require('fast-csv');
 const path = require('path');
-const { Product } = require('../db/product.js');
+const { Product } = require('../db/index.js');
 
 const productsStream = fs.createReadStream(path.join(__dirname, '/../../data/product.csv'));
 
@@ -13,22 +13,16 @@ var productData = [];
       .pipe(csv.parse({ headers: true }))
       .on('data', async row => {
         try {
-          productData.push({
+          var productData = {
             id: row['id'],
             name: row['name'],
             slogan: row['slogan'],
             description: row['description'],
             category: row['category'],
             default_price: row['default_price'],
-          });
+          };
 
-          if (productData.length === 10000) {
-            await Product.create(productData);
-
-            console.log(`Inserted ${productData.length} product data from Product CSV`);
-
-            productData = [];
-          }
+          await Product.create(productData);
         }
         catch (err) {
           throw err;
@@ -37,7 +31,6 @@ var productData = [];
       .on('end', async () => {
         var count = await Product.count();
         console.log(`Imported ${count} Product CSV data`);
-        process.exit();
       })
       .on('error', err => console.error(err));
   }
