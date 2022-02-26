@@ -15,8 +15,6 @@ exports.productOverview = {
       var queryPage = 1;
       var queryCount = 5;
 
-      console.log(page, count);
-
       if (page !== '' && page !== undefined) {
         queryPage = Number(page);
       }
