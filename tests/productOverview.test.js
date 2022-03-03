@@ -145,6 +145,7 @@ describe("Product Overview", () => {
       .expect('Content-Type', 'application/json; charset=utf-8')
       .expect(200)
       .expect((res) => {
+        console.log(res.body);
         res.body === [2, 3, 8, 7];
       })
       .end((err, res) => {

@@ -1,11 +1,15 @@
+require('dotenv').config();
+
+const uri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.w5dvi.mongodb.net/Cluster0?retryWrites=true&w=majority`;
+
 var mongoose = require('mongoose');
 
 var mongoDB = 'mongodb://127.0.0.1:27017/product-info';
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var db = mongoose.connection;
 
-db.on('connect', () => console.log('Connection established at ', mongoDB));
+db.on('connect', () => console.log('Connection established at ', uri));
 db.on('error', () => console.error.bind(console, 'MongoDB connection error:'));
 
 const productSchema = new mongoose.Schema({

@@ -43,6 +43,7 @@ productOverviewRouter.get('/:product_id/related', async (req, res) => {
   try {
     var productId = req.params.product_id;
     var data = await getRelatedProducts(productId);
+    console.log(data);
     res.status(200).send(data);
   }
   catch (error) {

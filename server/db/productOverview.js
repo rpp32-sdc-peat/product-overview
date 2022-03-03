@@ -45,7 +45,15 @@ exports.productOverview = {
   getStyles: async (productId) => {
     try {
       var stylesInfo = await Styles.findOne({ product_id: productId });
-      return stylesInfo;
+      if (stylesInfo) {
+        var stylesData = {
+          product_id: stylesInfo.product_id,
+          results: stylesInfo.results
+        };
+        return stylesData;
+      } else {
+        return;
+      }
     }
     catch (error) {
       throw error;
