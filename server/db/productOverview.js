@@ -1,58 +1,79 @@
 const axios = require('axios');
-const { Product, Styles, RelatedProducts } = require('./product.js');
+const { Product, Styles, RelatedProducts } = require('./index.js');
 
-// query -> parameters inserted from front end
-// : -> params (example -> :product_id)
+// under 50ms for API queries -> check Thunder Client / Postman
+// Redis and caching for optimization
+// Redis allows uploading a bunch of keys for 'warming up'
+// Do not set 'time to live' or else all the uploaded keys 'age out' and testing will be inefficient
 
-const productOverview = {
+// Test range -> half keys should already be in cache before testing
+// Let k6 run for awhile to 'warm' it up
+
+exports.productOverview = {
   getProducts: async (page, count) => {
     try {
-      // page -> page of results to return. Default: 1
-      // count -> how many results per page to return. Default: 5
       var queryPage = 1;
       var queryCount = 5;
 
-      if (page) {
+      if (page !== '' && page !== undefined) {
         queryPage = Number(page);
       }
 
-      if (count) {
+      if (count !== '' && count !== undefined) {
         queryCount = Number(count);
       }
 
-      var productList = Product.find({}).skip(30 * queryPage).limit(queryCount);
+      var productList = await Product.find({}).skip((queryPage > 1 ? 30 * queryPage : 0)).limit(queryCount);
+
+      return productList;
+    }
+    catch (error) {
+      throw error;
     }
   },
 
   getProduct: async (productId) => {
     try {
-      var productDetails = await Product.find({ id: productId });
+      var productDetails = await Product.findOne({ id: productId });
       return productDetails;
     }
     catch (error) {
       throw error;
     }
-  }
+  },
 
   getStyles: async (productId) => {
     try {
-      var stylesInfo = await Styles.find({ product_id: productId });
-      return stylesInfo;
+      var stylesInfo = await Styles.findOne({ product_id: productId });
+      if (stylesInfo) {
+        var stylesData = {
+          product_id: stylesInfo.product_id,
+          results: stylesInfo.results
+        };
+        return stylesData;
+      } else {
+        return;
+      }
     }
     catch (error) {
       throw error;
     }
-  }
+  },
 
   getRelatedProducts: async (productId) => {
     try {
-      var relProductsInfo = await RelatedProducts.findOne({ product_id: productId });
-      return relProductsInfo.related_products;
+      var relProductsInfo = await RelatedProducts.find({ product_id: productId });
+      var relProductsData = {
+        product_id: productId,
+        related_products: []
+      };
+      for (var i = 0; i < relProductsInfo.length; i++) {
+        relProductsData.related_products.push(...relProductInfo[i].relatedProducts);
+      }
+      return relProductsData;
     }
     catch (error) {
       throw error;
     }
   }
-}
-
-module.exports = productOverview;
+};

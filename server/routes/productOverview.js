@@ -1,20 +1,54 @@
 const productOverviewRouter = require('express').Router();
-const proxy = require('express-http-proxy');
 
-const { productOverview } = require('../controllers/productOverview.js');
-const { getProducts, }
+const { productOverview } = require('../db/productOverview.js');
+const { getProducts, getProduct, getStyles, getRelatedProducts } = productOverview;
 
-productOverviewRouter.route('/')
-  .get((req, res) => {proxy(getProducts(req, res))})
+// query -> parameters inserted from front end
+// : -> params (example -> :product_id)
 
-productOverviewRouter.route('/:product_id')
-  .get((req, res) => {proxy(getProduct(req, res))})
+productOverviewRouter.get('/', async (req, res) => {
+  try {
+    var [page, count] = [req.query.page, req.query.count];
+    var data = await getProducts(page, count);
+    res.status(200).send(data);
+  }
+  catch (error) {
+    res.status(500).send(error);
+  }
+});
 
+productOverviewRouter.get('/:product_id', async (req, res) => {
+  try {
+    var productId = req.params.product_id;
+    var data = await getProduct(productId);
+    res.status(200).send(data);
+  }
+  catch (error) {
+    res.status(500).send(error);
+  }
+});
 
-productOverviewRouter.route('/:product_id/styles')
-  .get((req, res) => {proxy(markQuestionHelpful(req, res))})
+productOverviewRouter.get('/:product_id/styles', async (req, res) => {
+  try {
+    var productId = req.params.product_id;
+    var data = await getStyles(productId);
+    res.status(200).send(data);
+  }
+  catch (error) {
+    res.status(500).send(error);
+  }
+});
 
-productOverviewRouter.route('/:product_id/related')
-  .get((req, res) => {proxy(markQuestionReported(req, res))})
+productOverviewRouter.get('/:product_id/related', async (req, res) => {
+  try {
+    var productId = req.params.product_id;
+    var data = await getRelatedProducts(productId);
+    console.log(data);
+    res.status(200).send(data);
+  }
+  catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 module.exports = productOverviewRouter;

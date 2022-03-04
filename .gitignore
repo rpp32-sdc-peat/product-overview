@@ -3,5 +3,4 @@ data
 coverage
 
 .DS_Store
-
-server/ETL
+.env
