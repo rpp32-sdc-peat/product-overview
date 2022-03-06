@@ -13,16 +13,25 @@ var productData = [];
       .pipe(csv.parse({ headers: true }))
       .on('data', async row => {
         try {
-          var productData = {
-            id: row['id'],
-            name: row['name'],
-            slogan: row['slogan'],
-            description: row['description'],
-            category: row['category'],
-            default_price: row['default_price'],
-          };
+          productData.push({
+            insertOne: {
+              id: row['id'],
+              name: row['name'],
+              slogan: row['slogan'],
+              description: row['description'],
+              category: row['category'],
+              default_price: row['default_price'],
+              features: []
+            }
+          })
 
-          await Product.create(productData);
+          if (productData.length === 5) {
+            productsStream.pause();
+            await Product.bulkWrite(productData);
+            console.log(`Inserted ${productData.length} Product Data`);
+            productData = [];
+            productsStream.resume();
+          }
         }
         catch (err) {
           throw err;
