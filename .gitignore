@@ -1,6 +1,7 @@
 node_modules
 data
 coverage
+dump
 
 .DS_Store
 .env

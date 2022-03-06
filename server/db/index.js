@@ -1,10 +1,10 @@
 require('dotenv').config();
 
-const uri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.w5dvi.mongodb.net/Cluster0?retryWrites=true&w=majority`;
+const uri = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@ec2-52-207-247-162.compute-1.amazonaws.com:27017/product-info`;
 
 var mongoose = require('mongoose');
 
-var mongoDB = 'mongodb://127.0.0.1:27017/product-info';
+// var mongoDB = 'mongodb://127.0.0.1:27017/product-info';
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var db = mongoose.connection;
