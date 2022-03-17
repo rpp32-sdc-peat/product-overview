@@ -1,8 +1,6 @@
-const axios = require('axios');
 const { Product, Styles, RelatedProducts } = require('./index.js');
 
 const redisClient = require('./redis.js');
-
 
 // under 50ms for API queries -> check Thunder Client / Postman
 // Redis and caching for optimization
@@ -14,6 +12,25 @@ const redisClient = require('./redis.js');
 
 // Redis Schema:
 // productId -> 'product', 'styles', 'relatedProducts' -> stringified data for each key
+
+getOrSetCache = (hash, key, cb) => {
+  return new Promise((resolve, reject) => {
+    redisClient.hGet(hash, key, async (error, data) => {
+      if (error) {
+        return reject(error);
+      }
+      if (data !== null) {
+        console.log(`REDIS ${key} data present`);
+        return resolve(JSON.parse(data));
+      } else {
+        console.log(`REDIS ${key} data not present`);
+        const data = await cb();
+        redisClient.hSet(hash, key, JSON.stringify(data));
+        resolve(data);
+      }
+    })
+  })
+}
 
 exports.productOverview = {
   getProducts: async (page, count) => {
@@ -41,17 +58,13 @@ exports.productOverview = {
   getProduct: async (productId) => {
     try {
       console.log(`GET /products/${productId}`);
-      await redisClient.hGet(productId, 'product', async (error, product) => {
-        if (error) console.error(error);
-        if (product !== null) {
-          console.log(`REDIS ${productId} product data not in Cache`);
-          return JSON.parse(product);
-        } else {
-          console.log(`REDIS ${productId} product data in Cache`);
-          var productDetails = await Product.findOne({ id: productId });
-          await redisClient.hSet(productId, 'product', JSON.stringify(productDetails));
-          return productDetails;
-        }})
+
+      var cache = await getOrSetCache(productId, 'product', async () => {
+        var data = await Product.findOne({ id: productId });
+        return data;
+      });
+
+      return cache;
     }
     catch (error) {
       throw error;
@@ -61,26 +74,22 @@ exports.productOverview = {
   getStyles: async (productId) => {
     try {
       console.log(`GET /products/${productId}/styles`);
-      await redisClient.hGet(productId, 'styles', async (error, styles) => {
-        if (error) console.error(error);
-        if (styles !== null) {
-          console.log(`REDIS ${productId} styles data not in Cache`);
-          return JSON.parse(styles);
+
+      var cache = await getOrSetCache(productId, 'styles', async () => {
+        var data = await Styles.findOne({ product_id: productId });
+        if (data) {
+          var stylesData = {
+            product_id: stylesInfo.product_id,
+            results: stylesInfo.results
+          };
+
+          return stylesData;
         } else {
-          console.log(`REDIS ${productId} styles data in Cache`);
-          var stylesInfo = await Styles.findOne({ product_id: productId });
-          if (stylesInfo) {
-            var stylesData = {
-              product_id: stylesInfo.product_id,
-              results: stylesInfo.results
-            };
-            await redisClient.hSet(productId, 'styles', JSON.stringify(stylesData));
-            return stylesData;
-          } else {
-            return;
-          }
+          return;
         }
-      })
+      });
+
+      return cache;
     }
     catch (error) {
       throw error;
@@ -89,31 +98,27 @@ exports.productOverview = {
 
   getRelatedProducts: async (productId) => {
     try {
-      await redisClient.connect();
       console.log(`GET /products/${productId}/related`);
-      await redisClient.hGet(productId, 'relatedProducts', async (error, relProds) => {
-        if (error) console.error(error);
-        if (relProds !== null) {
-          console.log(`REDIS ${productId} related products data not in Cache`);
-          return JSON.parse(relProds);
-        } else {
-          console.log(`REDIS ${productId} related products data in Cache`);
-          var relProductsInfo = await RelatedProducts.find({ product_id: productId });
-          if (relProductsInfo) {
-            var relProductsData = {
-              product_id: productId,
-              related_products: []
-            };
-            for (var i = 0; i < relProductsInfo.length; i++) {
-              relProductsData.related_products.push(...relProductInfo[i].relatedProducts);
-            }
-            await redisClient.hSet(productId, 'relatedProducts', JSON.stringify(relProductsData));
-            return relProductsData;
-          } else {
-            return;
+
+      var cache = await getOrSetCache(productId, 'relatedProducts', async () => {
+        var data = await RelatedProducts.find({ product_id: productId });
+        if (data) {
+          var relProductsData = {
+            product_id: productId,
+            related_products: []
+          };
+
+          for (var i = 0; i < data.length; i++) {
+            relProductsData.related_products.push(...data[i].relatedProducts);
           }
+
+          return relProductsData;
+        } else {
+          return;
         }
       })
+
+      return cache;
     }
     catch (error) {
       throw error;

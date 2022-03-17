@@ -6,20 +6,19 @@ const redis = require('redis');
 // url -> redis://<HOST>:<PORT> `redis://3.209.152.176:6379`,
 
 const redisClient = redis.createClient({
-  host: 'redis://3.209.152.176',
-  port: '6379'
+  url: 'redis://ec2-3-209-152-176.compute-1.amazonaws.com:6379',
+  legacyMode: true,
+  password: process.env.REDIS_PASSWORD
 });
 
-redisClient.auth(process.env.REDIS_PASSWORD, (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('Authorization Successful.');
-  }
-})
+var main = () => redisClient.connect();
+
+main();
+
+redisClient.on('connect', () => console.log('Redis Client Connected!'));
 
 redisClient.on('error', err => {
   console.log('Redis Connection Error: ' + err);
-})
+});
 
-export default redisClient;
+module.exports = redisClient;
