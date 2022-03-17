@@ -7,7 +7,9 @@ const redis = require('redis');
 // Connect to Redis
 // url -> redis://<HOST>:<PORT>
 
-const redisClient = redis.createClient({ url: `redis://3.209.152.176:6379` });
+const redisClient = redis.createClient({
+  url: `redis://ppark051191:${process.env.REDIS_PASSWORD}@3.209.152.176:6379`,
+});
 
 redisClient.on('error', err => {
   console.log('Redis Connection Error: ' + err);
