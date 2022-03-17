@@ -1,28 +1,8 @@
 const axios = require('axios');
 const { Product, Styles, RelatedProducts } = require('./index.js');
 
-const redis = require('redis');
+const redisClient = require('./redis.js');
 
-
-// Connect to Redis
-// url -> redis://<HOST>:<PORT> `redis://3.209.152.176:6379`,
-
-const redisClient = redis.createClient({
-  host: 'redis://3.209.152.176',
-  port: '6379'
-});
-
-redisClient.auth(process.env.REDIS_PASSWORD, (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('Authorization Successful.');
-  }
-})
-
-redisClient.on('error', err => {
-  console.log('Redis Connection Error: ' + err);
-})
 
 // under 50ms for API queries -> check Thunder Client / Postman
 // Redis and caching for optimization
@@ -60,7 +40,6 @@ exports.productOverview = {
 
   getProduct: async (productId) => {
     try {
-      await redisClient.connect();
       console.log(`GET /products/${productId}`);
       await redisClient.hGet(productId, 'product', async (error, product) => {
         if (error) console.error(error);
@@ -81,7 +60,6 @@ exports.productOverview = {
 
   getStyles: async (productId) => {
     try {
-      await redisClient.connect();
       console.log(`GET /products/${productId}/styles`);
       await redisClient.hGet(productId, 'styles', async (error, styles) => {
         if (error) console.error(error);
