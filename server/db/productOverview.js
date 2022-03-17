@@ -12,8 +12,6 @@ const redisClient = redis.createClient({
   port: '6379'
 });
 
-await redisClient.connect();
-
 redisClient.auth(process.env.REDIS_PASSWORD, (err) => {
   if (err) {
     console.log(err);
@@ -62,6 +60,7 @@ exports.productOverview = {
 
   getProduct: async (productId) => {
     try {
+      await redisClient.connect();
       console.log(`GET /products/${productId}`);
       await redisClient.hGet(productId, 'product', async (error, product) => {
         if (error) console.error(error);
@@ -82,6 +81,7 @@ exports.productOverview = {
 
   getStyles: async (productId) => {
     try {
+      await redisClient.connect();
       console.log(`GET /products/${productId}/styles`);
       await redisClient.hGet(productId, 'styles', async (error, styles) => {
         if (error) console.error(error);
@@ -111,6 +111,7 @@ exports.productOverview = {
 
   getRelatedProducts: async (productId) => {
     try {
+      await redisClient.connect();
       console.log(`GET /products/${productId}/related`);
       await redisClient.hGet(productId, 'relatedProducts', async (error, relProds) => {
         if (error) console.error(error);
