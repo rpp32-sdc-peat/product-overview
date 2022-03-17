@@ -8,7 +8,8 @@ const redis = require('redis');
 // url -> redis://<HOST>:<PORT>
 
 const redisClient = redis.createClient({
-  url: `redis://ppark051191:${process.env.REDIS_PASSWORD}@3.209.152.176:6379`,
+  host: `redis://3.209.152.176:6379`,
+  password: process.env.REDIS_PASSWORD
 });
 
 redisClient.on('error', err => {
