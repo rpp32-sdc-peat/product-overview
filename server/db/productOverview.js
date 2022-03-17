@@ -21,6 +21,9 @@ redisClient.on('error', err => {
 // Test range -> half keys should already be in cache before testing
 // Let k6 run for awhile to 'warm' it up
 
+// Redis Schema:
+// productId -> 'product', 'styles', 'relatedProducts' -> stringified data for each key
+
 exports.productOverview = {
   getProducts: async (page, count) => {
     try {
@@ -46,6 +49,7 @@ exports.productOverview = {
 
   getProduct: async (productId) => {
     try {
+      console.log(`GET /products/${productId}`);
       await redisClient.hGet(productId, 'product', async (error, product) => {
         if (error) console.error(error);
         if (product !== null) {
@@ -63,6 +67,7 @@ exports.productOverview = {
 
   getStyles: async (productId) => {
     try {
+      console.log(`GET /products/${productId}/styles`);
       await redisClient.hGet(productId, 'styles', async (error, styles) => {
         if (error) console.error(error);
         if (styles !== null) {
@@ -89,6 +94,7 @@ exports.productOverview = {
 
   getRelatedProducts: async (productId) => {
     try {
+      console.log(`GET /products/${productId}/related`);
       await redisClient.hGet(productId, 'relatedProducts', async (error, relProds) => {
         if (error) console.error(error);
         if (relProds !== null) {
