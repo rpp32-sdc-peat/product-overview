@@ -12,6 +12,8 @@ const redisClient = redis.createClient({
   port: '6379'
 });
 
+await redisClient.connect();
+
 redisClient.auth(process.env.REDIS_PASSWORD, (err) => {
   if (err) {
     console.log(err);
