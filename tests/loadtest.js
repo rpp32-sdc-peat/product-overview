@@ -1,11 +1,13 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 
+// 52.0.20.100:3000 is Elastic IP for Backend
+
 // vus: 1, 10, 100, 200
 
 export const options = {
-  vus: 100,
-  duration: '60s',
+  vus: 300,
+  duration: '5m',
   // stages: [
   //   { duration: '30s', target: 20 },
   //   { duration: '1m30s', target: 10 },
@@ -14,7 +16,7 @@ export const options = {
 }
 
 export default function () {
-  let res = http.get('http://localhost:8080/products');
+  let res = http.get('http://52.0.20.100:3000/products');
   check(res, {
     'GET /products is status 200': r => r.status === 200,
     'GET /products data contains 5 entries as default': r => {
@@ -48,7 +50,7 @@ export default function () {
   sleep(1);
 
   for (var i = 500; i < 600; i++) {
-    check(http.get(`http://localhost:8080/products/${i}`), {
+    check(http.get(`http://52.0.20.100:3000/products/${i}`), {
       'GET /products/:productId is status 200': r => r.status === 200,
       'GET /products/:productId data has all necessary keys for the product': r => {
         var data = JSON.parse(r.body);
@@ -78,7 +80,7 @@ export default function () {
   sleep(1);
 
   for (var i = 700; i < 800; i++) {
-    check(http.get(`http://localhost:8080/products/${i}/styles`), {
+    check(http.get(`http://52.0.20.100:3000/products/${i}/styles`), {
       'GET /products/:productId/styles is status 200': r => r.status === 200,
       'GET /products/:productId/styles data has all necessary keys for the product': r => {
         var data = r.body;
@@ -86,7 +88,6 @@ export default function () {
           var dataKeys = Object.keys(JSON.parse(data));
           var expectedKeys = ['product_id', 'results'];
           var isEqual = false;
-          console.log(Object.keys(JSON.parse(data).results[0]));
 
           for (var j = 0; j < dataKeys.length; j++) {
             if (dataKeys[j] === expectedKeys[j]) {

@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const uri = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@ec2-52-207-247-162.compute-1.amazonaws.com:27017/product-info`;
+const uri = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@ec2-18-206-68-240.compute-1.amazonaws.com:27017/product-info`;
 
 var mongoose = require('mongoose');
 
