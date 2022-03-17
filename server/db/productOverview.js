@@ -2,7 +2,10 @@ const axios = require('axios');
 const { Product, Styles, RelatedProducts } = require('./index.js');
 
 const redis = require('redis');
-const deployed = process.env.IPS;
+
+
+// Connect to Redis
+// url -> redis://<HOST>:<PORT>
 
 const redisClient = redis.createClient({ url: `redis://3.209.152.176:6379` });
 
