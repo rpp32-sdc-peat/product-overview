@@ -79,13 +79,13 @@ exports.productOverview = {
         var data = await Styles.findOne({ product_id: productId });
         if (data) {
           var stylesData = {
-            product_id: stylesInfo.product_id,
-            results: stylesInfo.results
+            product_id: data.product_id,
+            results: data.results
           };
 
           return stylesData;
         } else {
-          return;
+          return '';
         }
       });
 
@@ -114,7 +114,7 @@ exports.productOverview = {
 
           return relProductsData;
         } else {
-          return;
+          return '';
         }
       })
 
